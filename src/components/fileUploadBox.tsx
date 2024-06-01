@@ -1,10 +1,15 @@
-import React, { useState, DragEvent, ChangeEvent, useRef } from 'react';
-import * as XLSX from 'xlsx';
+import React, { useState, DragEvent, ChangeEvent, useRef } from "react";
+import * as XLSX from "xlsx";
+import MyDocument from "./document";
+import { Form } from "./types";
+import { pdf } from "@react-pdf/renderer";
+import JSZip from "jszip";
 
 const FileUploadBox: React.FC = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [jsonData, setJsonData] = useState<any[]>([]);
-  const [selectedFile, setSelectedFile] = useState<File>()
+  const [selectedFile, setSelectedFile] = useState<File>();
+  const [finalZip, setFinalZip] = useState<Blob>();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleDragEnter = (e: DragEvent<HTMLDivElement>) => {
@@ -37,16 +42,20 @@ const FileUploadBox: React.FC = () => {
     const files = e.target.files;
     if (files && files.length > 0) {
       handleFile(files[0]);
-      
     }
   };
 
   const handleFile = (file: File) => {
-    if (file && (file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || file.type === 'application/vnd.ms-excel')) {
+    if (
+      file &&
+      (file.type ===
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
+        file.type === "application/vnd.ms-excel")
+    ) {
+      setSelectedFile(file);
       readExcelFile(file);
-      setSelectedFile(file)
     } else {
-      alert('Please upload a valid Excel file.');
+      alert("Please upload a valid Excel file.");
     }
   };
 
@@ -54,7 +63,7 @@ const FileUploadBox: React.FC = () => {
     const reader = new FileReader();
     reader.onload = (e) => {
       const data = new Uint8Array(e.target?.result as ArrayBuffer);
-      const workbook = XLSX.read(data, { type: 'array' });
+      const workbook = XLSX.read(data, { type: "array" });
       const sheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[sheetName];
       const json = XLSX.utils.sheet_to_json(worksheet);
@@ -70,59 +79,108 @@ const FileUploadBox: React.FC = () => {
     }
   };
 
+  const handlePdfGeneration = async () => {
+    console.log(jsonData)
+    const zip = new JSZip();
+
+    let index, form;
+    for ([index, form] of Object.entries(jsonData)) {
+      form = new Form(form)
+      let pdfBlob = await pdf(<MyDocument form={form} />).toBlob();
+      let fileName = `form ${index+1} ${form.name}.pdf`;
+      zip.file(fileName, pdfBlob);
+    }
+    let zipBlob = await zip.generateAsync({ type: "blob" });
+    setFinalZip(zipBlob);
+  };
+
   return (
     <div
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
-      style={{
-        border: '2px dashed #ccc',
-        borderRadius: '10px',
-        padding: '20px',
-        textAlign: 'center',
-        width: '300px',
-        margin: '0 auto',
-      }}
+      className="flex h-max w-max"
     >
-      {isDragging ? (
-        <p>Release to drop files here</p>
-      ) : (
-        <div>
-          <input
-            type="file"
-            id="file"
-            style={{ display: 'none' }}
-            onChange={handleFileSelect}
-            accept=".xlsx,.xls"
-            ref={fileInputRef}
-          />
+      <div
+        style={{
+          border: "2px dashed #ccc",
+          borderRadius: "10px",
+          padding: "20px",
+          textAlign: "center",
+          width: "400px",
+          minHeight: "300px",
+          margin: "0 auto",
+          position: "relative",
+        }}
+        className="flex items-center justify-center flex-col"
+      >
+        {isDragging ? (
+          <p>Release to drop files here</p>
+        ) : (
+          <div>
+            <input
+              type="file"
+              id="file"
+              style={{ display: "none" }}
+              onChange={handleFileSelect}
+              accept=".xlsx,.xls"
+              ref={fileInputRef}
+            />
+            <button
+              onClick={handleButtonClick}
+              style={{
+                backgroundColor: "#007bff",
+                color: "#fff",
+              }}
+              className="justify-center items-center px-5 py-2.5 border-none rounded-md cursor-pointer"
+            >
+              Select File
+            </button>
+          </div>
+        )}
+        {/* {jsonData.length > 0 && (
+          <div style={{ marginTop: "20px", textAlign: "left" }}>
+            <pre>{JSON.stringify(jsonData, null, 2)}</pre>
+          </div>
+        )} */}
+        {selectedFile && (
+          <>
+            <div style={{ marginTop: "20px", textAlign: "left" }}>
+              <p>Selected File: {selectedFile.name}</p>
+              {/* You can add more file details or processing logic here */}
+            </div>
+          </>
+        )}
+
+        {selectedFile && !finalZip && (
           <button
-            onClick={handleButtonClick}
+            onClick={handlePdfGeneration}
             style={{
-              backgroundColor: '#007bff',
-              color: '#fff',
-              padding: '10px 20px',
-              border: 'none',
-              borderRadius: '5px',
-              cursor: 'pointer',
+              backgroundColor: "#007bff",
+              color: "#fff",
             }}
+            className="justify-center items-center mt-[20px] px-5 py-2.5 border-none rounded-md cursor-pointer active:border-none active:bg-[#007bff]"
           >
-            Select File
+            Convert to forms
           </button>
-        </div>
-      )}
-      {jsonData.length > 0 && (
-        <div style={{ marginTop: '20px', textAlign: 'left' }}>
-          <pre>{JSON.stringify(jsonData, null, 2)}</pre>
-        </div>
-      )}
-      {selectedFile && (
-        <div style={{ marginTop: '20px', textAlign: 'left' }}>
-          <p>Selected File: {selectedFile.name}</p>
-          {/* You can add more file details or processing logic here */}
-        </div>
-      )}
+        )}
+        {finalZip && (
+          <>
+            <a href={URL.createObjectURL(finalZip)} download={`forms ${(Date.now())}.zip`}>
+              <button
+                style={{
+                  backgroundColor: "#01d30f",
+                  color: "#fff",
+                }}
+                className="justify-center items-center mt-[20px] px-5 py-2.5 border-none rounded-md cursor-pointer active:border-none active:bg-[#007bff]"
+              >
+                Download Forms
+              </button>
+            </a>
+          </>
+        )}
+      </div>
     </div>
   );
 };
