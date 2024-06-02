@@ -2,10 +2,7 @@ import FileUploadBox from "./components/fileUploadBox";
 import "./App.css";
 
 const App = () => {
-  return (
-
-    <FileUploadBox />
-  );
+  return <FileUploadBox />;
 };
 
 export default App;

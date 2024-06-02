@@ -58,7 +58,7 @@ const FileUploadBox: React.FC = () => {
         file.name.substring(file.name.length - 4, file.name.length) == "xlsx")
     ) {
       console.log(
-        file.name.substring(file.name.length - 4, file.name.length) == "xlsx"
+        file.name.substring(file.name.length - 4, file.name.length) == "xlsx",
       );
       setSelectedFile(file);
       readExcelFile(file);
@@ -96,7 +96,7 @@ const FileUploadBox: React.FC = () => {
       let index: number, form;
       for ([index, form] of jsonData.entries()) {
         form = new Form(form);
-        
+
         let pdfBlob = await pdf(<MyDocument form={form} />).toBlob();
         let fileName = `form ${index + 1} ${form.name}.pdf`;
         zip.file(fileName, pdfBlob);
