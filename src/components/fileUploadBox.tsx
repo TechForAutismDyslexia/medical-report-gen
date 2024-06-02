@@ -4,11 +4,14 @@ import MyDocument from "./document";
 import { Form } from "./types";
 import { pdf } from "@react-pdf/renderer";
 import JSZip from "jszip";
+import spinnerSvg from "../assets/spinner.svg";
+import StyledButton from "./styledButton";
 
 const FileUploadBox: React.FC = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [jsonData, setJsonData] = useState<any[]>([]);
   const [selectedFile, setSelectedFile] = useState<File>();
+  const [isprocessing, setIsProcessing] = useState<boolean>();
   const [finalZip, setFinalZip] = useState<Blob>();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -51,8 +54,12 @@ const FileUploadBox: React.FC = () => {
       file &&
       (file.type ===
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
-        file.type === "application/vnd.ms-excel")
+        file.type === "application/vnd.ms-excel" ||
+        file.name.substring(file.name.length - 4, file.name.length) == "xlsx")
     ) {
+      console.log(
+        file.name.substring(file.name.length - 4, file.name.length) == "xlsx"
+      );
       setSelectedFile(file);
       readExcelFile(file);
     } else {
@@ -81,18 +88,28 @@ const FileUploadBox: React.FC = () => {
   };
 
   const handlePdfGeneration = async () => {
-    console.log(jsonData)
-    const zip = new JSZip();
+    try {
+      setIsProcessing(true);
+      console.log(jsonData);
+      const zip = new JSZip();
 
-    let index, form;
-    for ([index, form] of Object.entries(jsonData)) {
-      form = new Form(form)
-      let pdfBlob = await pdf(<MyDocument form={form} />).toBlob();
-      let fileName = `form ${index+1} ${form.name}.pdf`;
-      zip.file(fileName, pdfBlob);
+      let index: number, form;
+      for ([index, form] of jsonData.entries()) {
+        form = new Form(form);
+        
+        let pdfBlob = await pdf(<MyDocument form={form} />).toBlob();
+        let fileName = `form ${index + 1} ${form.name}.pdf`;
+        zip.file(fileName, pdfBlob);
+      }
+      let zipBlob = await zip.generateAsync({ type: "blob" });
+      setFinalZip(zipBlob);
+      setIsProcessing(false);
+    } catch (error) {
+      console.error(error);
+      if (error instanceof Error) {
+        alert(error.message);
+      }
     }
-    let zipBlob = await zip.generateAsync({ type: "blob" });
-    setFinalZip(zipBlob);
   };
 
   return (
@@ -109,12 +126,10 @@ const FileUploadBox: React.FC = () => {
           borderRadius: "10px",
           padding: "20px",
           textAlign: "center",
-          width: "400px",
-          minHeight: "300px",
           margin: "0 auto",
           position: "relative",
         }}
-        className="flex items-center justify-center flex-col"
+        className="flex items-center justify-center flex-col w-[300px] min-h-[300px] sm:w-[400px]"
       >
         {isDragging ? (
           <p>Release to drop files here</p>
@@ -128,56 +143,46 @@ const FileUploadBox: React.FC = () => {
               accept=".xlsx,.xls"
               ref={fileInputRef}
             />
-            <button
-              onClick={handleButtonClick}
-              style={{
-                backgroundColor: "#007bff",
-                color: "#fff",
-              }}
-              className="justify-center items-center px-5 py-2.5 border-none rounded-md cursor-pointer"
-            >
+            <StyledButton color="#007bff" onClick={handleButtonClick}>
               Select File
-            </button>
+            </StyledButton>
           </div>
-        )}
-        {/* {jsonData.length > 0 && (
-          <div style={{ marginTop: "20px", textAlign: "left" }}>
-            <pre>{JSON.stringify(jsonData, null, 2)}</pre>
-          </div>
-        )} */}
-        {selectedFile && (
-          <>
-            <div style={{ marginTop: "20px", textAlign: "left" }}>
-              <p>Selected File: {selectedFile.name}</p>
-              {/* You can add more file details or processing logic here */}
-            </div>
-          </>
         )}
 
-        {selectedFile && !finalZip && (
-          <button
-            onClick={handlePdfGeneration}
-            style={{
-              backgroundColor: "#007bff",
-              color: "#fff",
-            }}
-            className="justify-center items-center mt-[20px] px-5 py-2.5 border-none rounded-md cursor-pointer active:border-none active:bg-[#007bff]"
-          >
-            Convert to forms
-          </button>
+        {selectedFile && (
+          <div style={{ textAlign: "left" }} className="my-5">
+            <p>Selected File: {selectedFile.name}</p>
+          </div>
         )}
+
+        {selectedFile &&
+          !finalZip &&
+          (!isprocessing ? (
+            <StyledButton color="#007bff" onClick={handlePdfGeneration}>
+              Generate Report
+            </StyledButton>
+          ) : (
+            <StyledButton color="#007bff" onClick={() => {}}>
+              <div>
+                {" "}
+                <img
+                  className="size-7 animate-spin inline-block"
+                  src={spinnerSvg}
+                  alt=""
+                />
+                Processing...
+              </div>
+            </StyledButton>
+          ))}
         {finalZip && (
           <>
-            <a href={URL.createObjectURL(finalZip)} download={`forms ${(Date.now())}.zip`}>
-              <button
-                style={{
-                  backgroundColor: "#01d30f",
-                  color: "#fff",
-                }}
-                className="justify-center items-center mt-[20px] px-5 py-2.5 border-none rounded-md cursor-pointer active:border-none active:bg-[#007bff]"
-              >
+            <a
+              href={URL.createObjectURL(finalZip)}
+              download={`forms ${Date.now()}.zip`}
+            >
+              <StyledButton color="#01d30f" onClick={() => {}}>
                 Download Forms
-              </button>
+              </StyledButton>
             </a>
           </>
         )}

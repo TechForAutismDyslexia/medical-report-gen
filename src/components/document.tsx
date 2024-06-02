@@ -2,7 +2,6 @@ import { Page, Text, View, Document } from "@react-pdf/renderer";
 import { Form } from "./types";
 import styles from "./documentStyle";
 
-// Create Document Component
 const MyDocument = ({form}: {form: Form}) => (
   <Document>
     <Page style={styles.container}>

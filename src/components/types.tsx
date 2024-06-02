@@ -45,6 +45,10 @@ export class Form {
         this.parents = formData.Parents;
         this.parentsEmail = formData["Parent's Email"];
         this.homeAddress = formData["Home Address"];
+
+        if (!this.name || !this.dob || !this.dateOfAssessment || !this.ageOfAssessment || !this.gender || !this.school || !this.grade || !this.parents || !this.parentsEmail || !this.homeAddress) {
+            throw new TypeError("Invalid format. Missing required fields");
+        }
     }
 }
 
