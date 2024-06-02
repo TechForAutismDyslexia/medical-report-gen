@@ -46,6 +46,7 @@ const FileUploadBox: React.FC = () => {
   };
 
   const handleFile = (file: File) => {
+    setFinalZip(undefined);
     if (
       file &&
       (file.type ===
