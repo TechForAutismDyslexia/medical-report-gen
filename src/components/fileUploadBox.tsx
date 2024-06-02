@@ -109,6 +109,7 @@ const FileUploadBox: React.FC = () => {
       if (error instanceof Error) {
         alert(error.message);
       }
+      setIsProcessing(false);
     }
   };
 
