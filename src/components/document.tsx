@@ -1,4 +1,3 @@
-import React from "react";
 import { Page, Text, View, Document } from "@react-pdf/renderer";
 import { Form } from "./types";
 import styles from "./documentStyle";
@@ -24,7 +23,7 @@ const MyDocument = ({form}: {form: Form}) => (
           </View>
           <View style={styles.tableRow}>
             <Text style={styles.tableCol}>Date of Assessment:</Text>
-            <Text style={styles.tableCol}>{form.dateOfAssesment}</Text>
+            <Text style={styles.tableCol}>{form.dateOfAssessment}</Text>
           </View>
           <View style={styles.tableRow}>
             <Text style={styles.tableCol}>Gender:</Text>
