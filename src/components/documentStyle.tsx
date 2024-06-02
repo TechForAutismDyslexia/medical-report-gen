@@ -16,7 +16,6 @@ const styles = StyleSheet.create({
         fontWeight: 'ultrabold'
       },
       table: {
-        display: 'table',
         width: 'auto',
         borderStyle: 'solid',
         borderColor: '#fff',
