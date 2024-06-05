@@ -1,16 +1,3 @@
-// export interface Form {
-//     name: string;
-//     dob: string;
-//     dateOfAssesment: string;
-//     ageOfAssesment: string;
-//     gender: string;
-//     school: string;
-//     grade: string;
-//     parents: string;
-//     parentsEmail: string;
-//     homeAddress: string;
-// }
-
 export class Form {
   name: string;
   dob: string;
@@ -22,6 +9,7 @@ export class Form {
   parents: string;
   parentsEmail: string;
   homeAddress: string;
+  "WISC Test Results": WiscIndex[];
 
   constructor(formData: {
     Name: string;
@@ -34,6 +22,7 @@ export class Form {
     "Home Address": string;
     Parents: string;
     "Parent's Email": string;
+    "WISC Test Results": WiscIndex[];
   }) {
     this.name = formData.Name;
     this.dob = formData["Date of Birth"];
@@ -45,6 +34,7 @@ export class Form {
     this.parents = formData.Parents;
     this.parentsEmail = formData["Parent's Email"];
     this.homeAddress = formData["Home Address"];
+    this["WISC Test Results"] = formData["WISC Test Results"];
 
     if (
       !this.name ||
@@ -61,4 +51,12 @@ export class Form {
       throw new TypeError("Invalid format. Missing required fields");
     }
   }
+}
+
+export interface WiscIndex {
+  "WISC-V Indexes": string;
+  "Composite Score": number;
+  "Percentile Rank": number;
+  "95% Confidence Interval": string;
+  "Qualitative Description": string;
 }

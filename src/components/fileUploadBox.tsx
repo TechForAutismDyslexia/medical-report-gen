@@ -75,7 +75,13 @@ const FileUploadBox: React.FC = () => {
       const sheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[sheetName];
       const json = XLSX.utils.sheet_to_json(worksheet);
+
+      for (let i of json) {
+        let testResults = workbook.Sheets[(i as any)["Name"]];
+        (i as any)["WISC Test Results"] = XLSX.utils.sheet_to_json(testResults);
+      }
       setJsonData(json);
+
       console.log(json);
     };
     reader.readAsArrayBuffer(file);
@@ -96,6 +102,8 @@ const FileUploadBox: React.FC = () => {
       let index: number, form;
       for ([index, form] of jsonData.entries()) {
         form = new Form(form);
+
+        console.log(form);
 
         let pdfBlob = await pdf(<MyDocument form={form} />).toBlob();
         let fileName = `form ${index + 1} ${form.name}.pdf`;
