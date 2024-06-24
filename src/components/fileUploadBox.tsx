@@ -58,7 +58,7 @@ const FileUploadBox: React.FC = () => {
         file.name.substring(file.name.length - 4, file.name.length) == "xlsx")
     ) {
       console.log(
-        file.name.substring(file.name.length - 4, file.name.length) == "xlsx",
+        file.name.substring(file.name.length - 4, file.name.length) == "xlsx"
       );
       setSelectedFile(file);
       readExcelFile(file);
@@ -103,8 +103,6 @@ const FileUploadBox: React.FC = () => {
       for ([index, form] of jsonData.entries()) {
         form = new Form(form);
 
-        console.log(form);
-
         let pdfBlob = await pdf(<MyDocument form={form} />).toBlob();
         let fileName = `form ${index + 1} ${form.name}.pdf`;
         zip.file(fileName, pdfBlob);
@@ -138,12 +136,12 @@ const FileUploadBox: React.FC = () => {
           margin: "0 auto",
           position: "relative",
         }}
-        className="flex items-center justify-center flex-col w-[300px] min-h-[300px] sm:w-[400px]"
+        className="flex flex-col w-[300px] min-h-[300px] sm:w-[400px]"
       >
         {isDragging ? (
-          <p>Release to drop files here</p>
+          <div className="flex-grow flex items-center justify-center"><p >Release to drop files here</p></div>
         ) : (
-          <div>
+          <div className="mt-10">
             <input
               type="file"
               id="file"
@@ -152,6 +150,10 @@ const FileUploadBox: React.FC = () => {
               accept=".xlsx,.xls"
               ref={fileInputRef}
             />
+            <p>
+              <p>Drop a file here</p>
+              <p className="mb-4">or</p>
+            </p>
             <StyledButton color="#007bff" onClick={handleButtonClick}>
               Select File
             </StyledButton>
