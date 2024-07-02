@@ -1,7 +1,7 @@
 import ReactPDF, { Font } from "@react-pdf/renderer";
 import {
   View,
-  Image,
+  // Image,
   Text,
   Page,
   Document,
@@ -41,4 +41,4 @@ let styles = StyleSheet.create({
     }
 });
 
-ReactPDF.render(<MyDocument />);
+ReactPDF.render(<MyDocument />, "./output.pdf");
