@@ -1,7 +1,7 @@
 import ReactPDF, { Font } from "@react-pdf/renderer";
 import {
   View,
-  // Image,
+  // Image,k
   Text,
   Page,
   Document,
