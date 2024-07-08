@@ -7,7 +7,7 @@ export default function MyPage() {
   return (
     <Page style={styles.page}>
       <View style={style.body}>
-      <Text style={styles.title}>Intellectual and Educational Assessment Report.</Text>
+      <Text style={styles.title}>Intellectual and Educational Assessment Report</Text>
       
       <View style={styles.infoGrid}>
         <Text style={styles.infoItem}><Text style={styles.bold}>Name:</Text> Sadhvi Kolan</Text>
