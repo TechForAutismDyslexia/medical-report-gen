@@ -3,7 +3,7 @@ import { Form, WiscIndex } from "./types";
 import styles from "./documentStyle";
 
 const MyDocument = ({ form }: { form: Form }) => (
-  <Document>
+  <Document >
     <Page style={styles.container}>
       {/* <View style={styles.header}>
         <Image src={icon} style={styles.icon} />

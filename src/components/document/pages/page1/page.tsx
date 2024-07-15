@@ -9,7 +9,7 @@ export default function MyPage() {
       <View style={style.body}>
       <Text style={styles.title}>Intellectual and Educational Assessment Report.</Text>
       
-      <View style={styles.infoGrid}>
+      <View style={styles.infoGrid}>  
         <Text style={styles.infoItem}><Text style={styles.bold}>Name:</Text> Sadhvi Kolan</Text>
         <Text style={styles.infoItem}><Text style={styles.bold}>Gender:</Text> Female</Text>
         <Text style={styles.infoItem}><Text style={styles.bold}>Date of Testing:</Text> 5th June 2024</Text>
