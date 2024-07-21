@@ -39,7 +39,7 @@ export default StyleSheet.create({
         fontSize: 12,
         marginBottom: 10,
         //line space 
-        
+
         lineHeight: 1.2,
         // word space
         letterSpacing: 1,
@@ -49,7 +49,11 @@ export default StyleSheet.create({
         justifyContent: 'center',
         width: '50%',
         borderStyle: 'solid',
-        borderWidth: 2,
+        // borderBottomWidth: 2,
+        // borderWidth: 2,
+        borderTopWidth: 1,
+        borderLeftWidth: 1,
+      
         borderColor: 'black',
         marginBottom: 10,
       },
@@ -60,7 +64,8 @@ export default StyleSheet.create({
       tableCell: {
         width: '70%',
         borderStyle: 'solid',
-        borderWidth: 1,
+        borderBottomWidth: 1,
+        borderRightWidth: 1,
         borderColor: 'black',
         padding: 2,
         fontSize: 12,
