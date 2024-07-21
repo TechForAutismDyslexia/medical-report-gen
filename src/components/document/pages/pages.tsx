@@ -1,3 +1,4 @@
+import Page5 from "./page5/page";
 import Page4 from "./page4/page";
 
 import Page1 from "./page1/page";
@@ -8,5 +9,6 @@ export default {
     Page1,
     Page2,
     Page3,
-    Page4
+    Page4,
+    Page5
 }
