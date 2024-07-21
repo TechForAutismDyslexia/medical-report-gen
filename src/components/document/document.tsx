@@ -7,6 +7,7 @@ export default function MyDocument() {
     <Document>
       <Pages.Page1 />
       <Pages.Page2/>
+      <Pages.Page3/>
     </Document>
   );
 }
