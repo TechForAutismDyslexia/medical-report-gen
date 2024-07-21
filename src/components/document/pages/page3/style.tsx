@@ -1,15 +1,31 @@
-import { StyleSheet } from "@react-pdf/renderer";
+import { StyleSheet, Font } from "@react-pdf/renderer";
+
+Font.register({
+  family: "Noto Sans",
+  fonts: [
+    {
+      src: "https://dgspjhhkvivhccolkflh.supabase.co/storage/v1/object/public/pdfassets/MedicalReportGenAssets/noto-sans.regular.ttf",
+      fontStyle: "normal",
+      fontWeight: "normal",
+    },
+    {
+      src: "https://dgspjhhkvivhccolkflh.supabase.co/storage/v1/object/public/pdfassets/MedicalReportGenAssets/noto-sans.bold.ttf",
+      fontStyle: "normal",
+      fontWeight: "bold",
+    }
+  ]
+});
 
 export default StyleSheet.create({
   page: {
     flexDirection: "column",
     backgroundColor: "#FFFFFF",
     padding: 40,
-    fontFamily: "Times-Roman",
+    fontFamily: "Noto Sans",
     fontSize: 13,
   },
   body: {
-    // marginTop: "48.25mm",
+    marginTop: "20.00mm",
   },
   heading: {
     alignItems: "center",
