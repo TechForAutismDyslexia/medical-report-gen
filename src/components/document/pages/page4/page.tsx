@@ -33,8 +33,8 @@ export default function MyPage() {
                 <View style={styles.tableContainer}>
                     <View style={styles.table}>
                         <View style={styles.tableRow}>
-                            <View style={styles.tableCol}><Text style={styles.tableCell}>Performance Tests</Text></View>
-                            <View style={styles.tableCol}><Text style={styles.tableCell}>Performance Quotient</Text></View>
+                            <View style={[styles.tableCol,styles.bold]}><Text style={styles.tableCell}>Performance Tests</Text></View>
+                            <View style={[styles.tableCol,styles.bold]}><Text style={styles.tableCell}>Performance Quotient</Text></View>
                         </View>
                         <View style={styles.tableRow}>
                             <View style={styles.tableCol}><Text style={styles.tableCell}>Picture  Completion</Text></View>
