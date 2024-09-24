@@ -1,6 +1,6 @@
 import React, { useState, DragEvent, ChangeEvent, useRef } from "react";
 import * as XLSX from "xlsx";
-import MyDocument from "./document";
+import MyDocument from "../components/document/document";
 import { Form } from "./types";
 import { pdf } from "@react-pdf/renderer";
 import JSZip from "jszip";
@@ -67,7 +67,7 @@ const FileUploadBox: React.FC = () => {
     }
   };
 
-  const readExcelFile = (file: File) => {
+  const readExcelFile = (file: File) => {   
     const reader = new FileReader();
     reader.onload = (e) => {
       const data = new Uint8Array(e.target?.result as ArrayBuffer);
@@ -103,7 +103,7 @@ const FileUploadBox: React.FC = () => {
       for ([index, form] of jsonData.entries()) {
         form = new Form(form);
 
-        let pdfBlob = await pdf(<MyDocument form={form} />).toBlob();
+        let pdfBlob = await pdf(<MyDocument  />).toBlob();
         let fileName = `form ${index + 1} ${form.name}.pdf`;
         zip.file(fileName, pdfBlob);
       }
