@@ -20,25 +20,23 @@ export default function MyDocument() {
   );
 }
 
-Font.register(
-  {
-    src: "https://dgspjhhkvivhccolkflh.supabase.co/storage/v1/object/public/pdfassets/MedicalReportGenAssets/TeeFranklinBook.ttf",
-    family: "Tee Franklin Book"
-  }
-);
+Font.register({
+  src: "https://dgspjhhkvivhccolkflh.supabase.co/storage/v1/object/public/pdfassets/MedicalReportGenAssets/TeeFranklinBook.ttf",
+  family: "Tee Franklin Book",
+});
 
-let styles = StyleSheet.create({
-    page: {
-        flexDirection: "row",
-        backgroundColor: "#E4E4E4",
-        fontFamily: "Tee Franklin Book",
-        // fontWeight: "",
-    },
-    section: {
-        margin: 10,
-        padding: 10,
-        flexGrow: 1
-    }
+const styles = StyleSheet.create({
+  page: {
+    flexDirection: "row",
+    backgroundColor: "#E4E4E4",
+    fontFamily: "Tee Franklin Book",
+    // fontWeight: "",
+  },
+  section: {
+    margin: 10,
+    padding: 10,
+    flexGrow: 1,
+  },
 });
 
 ReactPDF.render(<MyDocument />, "./output.pdf");

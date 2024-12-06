@@ -1,9 +1,5 @@
 import React, { useState, DragEvent, ChangeEvent, useRef } from "react";
 import * as XLSX from "xlsx";
-import MyDocument from "../components/document/document";
-import { Form } from "./types";
-import { pdf } from "@react-pdf/renderer";
-import JSZip from "jszip";
 import spinnerSvg from "../assets/spinner.svg";
 import StyledButton from "./styledButton";
 import axios from "axios";
@@ -61,7 +57,7 @@ const FileUploadBox: React.FC = () => {
         file.name.substring(file.name.length - 4, file.name.length) == "xlsx")
     ) {
       console.log(
-        file.name.substring(file.name.length - 4, file.name.length) == "xlsx"
+        file.name.substring(file.name.length - 4, file.name.length) == "xlsx",
       );
       setSelectedFile(file);
       readExcelFile(file);
@@ -110,11 +106,11 @@ const FileUploadBox: React.FC = () => {
       //   let fileName = `form ${index + 1} ${form.name}.pdf`;
       //   zip.file(fileName, pdfBlob);
       // }
-      let zipResp = await axios.post(`${host}/generate`, jsonData, {
+      const zipResp = await axios.post(`${host}/generate`, jsonData, {
         responseType: "blob",
       });
       // let zipBlob = new Blob([zipResp.data], {type: "application/octet-stream"});
-      let zipBlob = zipResp.data;
+      const zipBlob = zipResp.data;
       setFinalZip(zipBlob);
       setIsProcessing(false);
     } catch (error) {
