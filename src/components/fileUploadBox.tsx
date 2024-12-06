@@ -6,6 +6,9 @@ import { pdf } from "@react-pdf/renderer";
 import JSZip from "jszip";
 import spinnerSvg from "../assets/spinner.svg";
 import StyledButton from "./styledButton";
+import axios from "axios";
+
+import { host } from "../config";
 
 const FileUploadBox: React.FC = () => {
   const [isDragging, setIsDragging] = useState(false);
@@ -67,7 +70,7 @@ const FileUploadBox: React.FC = () => {
     }
   };
 
-  const readExcelFile = (file: File) => {   
+  const readExcelFile = (file: File) => {
     const reader = new FileReader();
     reader.onload = (e) => {
       const data = new Uint8Array(e.target?.result as ArrayBuffer);
@@ -76,10 +79,10 @@ const FileUploadBox: React.FC = () => {
       const worksheet = workbook.Sheets[sheetName];
       const json = XLSX.utils.sheet_to_json(worksheet);
 
-      for (let i of json) {
-        let testResults = workbook.Sheets[(i as any)["Name"]];
-        (i as any)["WISC Test Results"] = XLSX.utils.sheet_to_json(testResults);
-      }
+      // for (let i of json) {
+      //   let testResults = workbook.Sheets[(i as any)["Name"]];
+      //   (i as any)["WISC Test Results"] = XLSX.utils.sheet_to_json(testResults);
+      // }
       setJsonData(json);
 
       console.log(json);
@@ -97,17 +100,21 @@ const FileUploadBox: React.FC = () => {
     try {
       setIsProcessing(true);
       console.log(jsonData);
-      const zip = new JSZip();
+      // const zip = new JSZip();
 
-      let index: number, form;
-      for ([index, form] of jsonData.entries()) {
-        form = new Form(form);
+      // let index: number, form;
+      // for ([index, form] of jsonData.entries()) {
+      //   form = new Form(form);
 
-        let pdfBlob = await pdf(<MyDocument  />).toBlob();
-        let fileName = `form ${index + 1} ${form.name}.pdf`;
-        zip.file(fileName, pdfBlob);
-      }
-      let zipBlob = await zip.generateAsync({ type: "blob" });
+      //   let pdfBlob = await pdf(<MyDocument  />).toBlob();
+      //   let fileName = `form ${index + 1} ${form.name}.pdf`;
+      //   zip.file(fileName, pdfBlob);
+      // }
+      let zipResp = await axios.post(`${host}/generate`, jsonData, {
+        responseType: "blob",
+      });
+      // let zipBlob = new Blob([zipResp.data], {type: "application/octet-stream"});
+      let zipBlob = zipResp.data;
       setFinalZip(zipBlob);
       setIsProcessing(false);
     } catch (error) {
@@ -139,7 +146,9 @@ const FileUploadBox: React.FC = () => {
         className="flex flex-col w-[300px] min-h-[300px] sm:w-[400px]"
       >
         {isDragging ? (
-          <div className="flex-grow flex items-center justify-center"><p >Release to drop files here</p></div>
+          <div className="flex-grow flex items-center justify-center">
+            <p>Release to drop files here</p>
+          </div>
         ) : (
           <div className="mt-10">
             <input
