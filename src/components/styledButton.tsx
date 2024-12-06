@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 export default function StyledButton({
   color = "#007bff",
   children,
-  onClick,
+  onClick = () => {},
 }: {
   color: string;
   children: ReactNode;
