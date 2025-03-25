@@ -1,5 +1,5 @@
 import { Page, Text, View, Document } from "@react-pdf/renderer";
-import { Form, WiscIndex } from "./types";
+import { Form, WiscIndex } from "../types";
 import styles from "./documentStyle";
 
 const MyDocument = ({ form }: { form: Form }) => (

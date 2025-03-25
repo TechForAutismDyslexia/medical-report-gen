@@ -8,6 +8,7 @@ import { host } from "../config";
 
 const FileUploadBox: React.FC = () => {
   const [isDragging, setIsDragging] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [jsonData, setJsonData] = useState<any[]>([]);
   const [selectedFile, setSelectedFile] = useState<File>();
   const [isprocessing, setIsProcessing] = useState<boolean>();
